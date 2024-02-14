@@ -18,14 +18,14 @@ namespace Apteka
         {
             InitializeComponent();
         }
-
+        //Закриття вікна
         private void button2_Click(object sender, EventArgs e)
         {
             drugsBuy = new drugsBuy();
             drugsBuy.Show();
             this.Close();
         }
-
+        //Додавання ліків до БД
         private void button1_Click(object sender, EventArgs e)
         {
             using (SqlConnection connection = new SqlConnection(BDconnect))

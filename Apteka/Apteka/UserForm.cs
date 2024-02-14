@@ -94,7 +94,7 @@ namespace Apteka
             textBox1.Show();
             textBox1.Text = "";
         }
-
+        //поповнення рахунку
         private void button4_Click(object sender, EventArgs e)
         {
             int money;

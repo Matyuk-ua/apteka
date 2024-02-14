@@ -21,9 +21,10 @@ namespace Apteka
             splitContainer1.FixedPanel = FixedPanel.Panel1;
             this.ControlBox = false;
         }
-
+        //виведення даних з БД
         private void drugsBuy_Load(object sender, EventArgs e)
         {
+            //Вивід даних в таблицю
             using (SqlConnection connection = new SqlConnection(BDconnect))
             {
                 connection.Open();
@@ -38,6 +39,7 @@ namespace Apteka
                     dataGridView1.Dock = DockStyle.Fill;
 
                 }
+                //Вивід рахунку користувача
                 sqlQuery = "SELECT Money FROM Users WHERE id_user = @id_user";
                 using (SqlCommand command = new SqlCommand(sqlQuery, connection))
                 {
@@ -47,14 +49,14 @@ namespace Apteka
                 }
             }
         }
-
+        //повернення на головну форму
         private void button1_Click(object sender, EventArgs e)
         {
             UserForm = new UserForm();
             UserForm.Show();
             this.Close();
         }
-
+        //замовлення ліків
         private void button2_Click(object sender, EventArgs e)
         {
             int rowIndex = 0;
@@ -67,6 +69,7 @@ namespace Apteka
                 MessageBox.Show("Помилка. виберіть один рядок");
                 return;
             }
+            //перевірка рахунку
             int cost = Convert.ToInt32(dataGridView1.Rows[rowIndex].Cells["Cost"].Value);
             int money = Convert.ToInt32(label2.Text);
             if ((money-cost)<0)
@@ -77,21 +80,20 @@ namespace Apteka
             string id = dataGridView1.Rows[rowIndex].Cells["Id_drug"].Value.ToString();
             DateTime currentDateAndTime = DateTime.Now;
 
-            // Вставляємо дані у базу даних
+            // Додавання Замовлення в БД
             using (SqlConnection connection = new SqlConnection(BDconnect))
             {
                 connection.Open();
                 sqlQuery = "INSERT INTO Orders (id_user, id_drug, Order_date) VALUES (@id_user, @id_drug, @Order_date)";
                 using (SqlCommand command = new SqlCommand(sqlQuery, connection))
                 {
-                    // Додаємо параметри для запиту
                     command.Parameters.AddWithValue("@id_user", GlobalVariables.user_id);
                     command.Parameters.AddWithValue("@id_drug", id);
                     command.Parameters.AddWithValue("@Order_date", currentDateAndTime);
 
-                    // Виконуємо запит
                     command.ExecuteNonQuery();
                 }
+                //Вивід грошей з рахунку
                 money -= cost;
                 sqlQuery = "UPDATE Users SET Money = @Money WHERE id_user = @id_user";
                 using (SqlCommand command = new SqlCommand(sqlQuery, connection))
@@ -112,7 +114,7 @@ namespace Apteka
 
             MessageBox.Show("Замовлення успішно створене. Перевірте ваші замовлення на сторінці користувача.");
         }
-
+        //Відкриття вікна створення нових ліків
         private void button3_Click(object sender, EventArgs e)
         {
             newDrug = new newDrug();
